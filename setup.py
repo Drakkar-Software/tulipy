@@ -16,11 +16,11 @@ ext_modules = [
 ]
 
 setup(
-    name='tulipy',
+    name='OctoBot-Tulipy',
     description='Financial Technical Analysis Indicator Library. Python bindings for https://github.com/TulipCharts/tulipindicators',
     long_description=long_description,
     long_description_content_type='text/markdown; charset=UTF-8',
-    version='0.4.0',
+    version='0.4.1',
     url='https://github.com/Drakkar-Software/tulipy',
     author='Drakkar-Software',
     license='LGPL-3.0',
