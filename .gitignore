@@ -11,3 +11,4 @@ gen/*.c
 *.swp
 __pycache__/
 pip-wheel-metadata/
+.idea
