@@ -36,103 +36,20 @@ jobs:
     - name: Tests
       run: python tests/test.py
 
-  build_wheels:
+  publish:
     needs: tests
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    name: ${{ matrix.os }}-${{ matrix.arch }} - deploy
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        arch: [ x64 ]
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ secrets.CI_PYTHON_VERSION }}
-        architecture: ${{ matrix.arch }}
-
-    - name: Install dependencies
-      if: matrix.os != 'ubuntu-latest'
-      run: pip install --prefer-binary -r dev_requirements.txt -r requirements.txt
-
-    - name: Build wheel
-      if: matrix.os != 'ubuntu-latest'
-      run: python setup.py bdist_wheel
-
-    - name: Install cibuildwheel
-      if: matrix.os == 'ubuntu-latest'
-      run: pip install cibuildwheel twine
-
-    - name: set up qemu
-      if: matrix.os == 'ubuntu-latest'
-      uses: docker/setup-qemu-action@v1
-      with:
-        platforms: arm64
-
-    - name: Build wheels
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        python -m cibuildwheel --output-dir wheelhouse
-      env:
-        CIBW_BUILD: ${{ secrets.CI_PYTHON_CIBW_BUILD }}
-        CIBW_BUILD_VERBOSITY_LINUX: 0
-        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-        CIBW_MANYLINUX_I686_IMAGE: manylinux2014
-        CIBW_ARCHS_LINUX: 'auto aarch64'
-        CIBW_BEFORE_BUILD_LINUX: >
-          python -m pip install --upgrade pip
-          pip install --prefer-binary auditwheel -r dev_requirements.txt -r requirements.txt
-        CIBW_BEFORE_ALL_LINUX: >
-          yum install -y libffi libffi-devel openssl-devel wget unzip blas-devel lapack-devel libxml2-devel libxslt-devel
-
-    - name: Publish package
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        python -m twine upload --repository-url ${{ secrets.PYPI_OFFICIAL_UPLOAD_URL }} -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }} --skip-existing wheelhouse/*
-
-    - name: Publish package
-      if: matrix.os != 'ubuntu-latest'
-      run: |
-        python -m twine upload --repository-url ${{ secrets.PYPI_OFFICIAL_UPLOAD_URL }} -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }} --skip-existing dist/*
-
-  build_sdist:
-    needs: tests
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-    name: Source distribution - deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ secrets.CI_PYTHON_VERSION }}
-
-      - name: Install dependencies
-        run: pip install --prefer-binary -r dev_requirements.txt -r requirements.txt
-
-      - name: Build sdist
-        run: python setup.py sdist
-
-      - name: Publish package
-        run: |
-          python -m twine upload --repository-url ${{ secrets.PYPI_OFFICIAL_UPLOAD_URL }} -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_PASSWORD }} --skip-existing dist/*
+    uses: Drakkar-Software/.github/.github/workflows/python3_wheel_workflow.yml@master
+    secrets:
+      PYPI_OFFICIAL_UPLOAD_URL: ${{ secrets.PYPI_OFFICIAL_UPLOAD_URL }}
+      PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+      PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
   notify:
-    name: Notify
-    runs-on: ubuntu-latest
+    if: ${{ failure() }}
     needs:
       - tests
-      - build_wheels
-      - build_sdist
-    if: ${{ failure() }}
-
-    steps:
-      - name: Notify discord
-        uses: sarisia/actions-status-discord@v1
-        with:
-          status: Failure
-          webhook: ${{ secrets.DISCORD_GITHUB_WEBHOOK }}
+      - publish
+    uses: Drakkar-Software/.github/.github/workflows/failure_notify_workflow.yml@master
+    secrets:
+      DISCORD_GITHUB_WEBHOOK: ${{ secrets.DISCORD_GITHUB_WEBHOOK }}
