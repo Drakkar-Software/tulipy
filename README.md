@@ -2,7 +2,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/g34af6ti605e2q4h?svg=true)](https://ci.appveyor.com/project/cirla/tulipy)
 
 # tulipy
-*Forked by Drakkar-Software for the only purpose of keeping the versions of the dependencies up to date.*
+*Forked by Drakkar-Software for the only purpose of keeping dependencies version up to date.*
 
 ## Python bindings for [Tulip Indicators](https://tulipindicators.org/)
 
