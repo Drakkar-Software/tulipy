@@ -4,5 +4,5 @@
 #
 #    pip-compile 
 #
-cython==0.29.24
-numpy==1.21.2
+cython==0.29.26
+numpy==1.22.0
