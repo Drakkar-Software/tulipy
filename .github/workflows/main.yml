@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        os: [ ubuntu-latest ]
         arch: [ x64 ]
         type: [ cython ]
 
@@ -43,16 +43,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, windows-2019, macOS-10.15]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: ilammy/msvc-dev-cmd@v1
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-latest'
 
       - name: Install OpenBLAS (macos)
-        if: matrix.os == 'macOS-10.15'
+        if: matrix.os == 'macOS-latest'
         run: |
           brew install openblas
           echo "OPENBLAS=$(brew --prefix openblas)" >> $GITHUB_ENV
@@ -73,11 +73,11 @@ jobs:
     name: Build source distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.10.X'
 
       - name: Build sdist
         run: |
