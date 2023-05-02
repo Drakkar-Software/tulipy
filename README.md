@@ -7,7 +7,7 @@ Tulipy requires [numpy](http://www.numpy.org/) as all inputs and outputs are num
 
 ## Installation
 
-You can install via `pip install tulipy`.
+You can install via `pip install newtulipy`.
 If a wheel is not available for your system, you will need to `pip install Cython numpy` to build from the source distribution.
 When building from source on Windows, you will need the Microsoft Visual C++ Build Tools installed.
 

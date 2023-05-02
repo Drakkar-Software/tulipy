@@ -27,7 +27,7 @@ setup(
     cmdclass={'build_ext': build_ext},
     ext_modules=ext_modules,
     packages=find_packages(exclude=["tests"]),
-    install_requires=['numpy'],
+    install_requires=['numpy >= 1.22.3'],
     setup_requires=['Cython', 'numpy'],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -36,7 +36,6 @@ setup(
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
         'Operating System :: OS Independent',
         'Programming Language :: Cython',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Office/Business :: Financial',
         'Topic :: Scientific/Engineering :: Information Analysis',
