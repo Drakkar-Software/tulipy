@@ -1,5 +1,4 @@
 # tulipy
-*Forked by Drakkar-Software for the only purpose of keeping dependencies version up to date.*
 
 ## Python bindings for [Tulip Indicators](https://tulipindicators.org/)
 
@@ -27,7 +26,7 @@ ti.TI_VERSION
 
 
 
-    '0.8.4'
+    '0.9.2'
 
 
 
