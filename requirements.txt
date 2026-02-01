@@ -1,3 +1,4 @@
 cython==0.29.37
-numpy==1.26.3
+# numpy==1.26.3
 # numpy==2.3.5
+numpy==2.4.2
