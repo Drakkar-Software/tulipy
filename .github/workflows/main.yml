@@ -23,7 +23,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12.X'
+        python-version: '3.13.X'
         architecture: ${{ matrix.arch }}
 
     - name: Install dependencies
@@ -41,7 +41,7 @@ jobs:
     uses: Drakkar-Software/.github/.github/workflows/python3_wheel_workflow.yml@add-mobile-wheels
     with:
       build_mobile_wheels: true
-      python_version: 3.12.X
+      python_version: 3.13.X
     secrets:
       PYPI_OFFICIAL_UPLOAD_URL: ${{ secrets.PYPI_OFFICIAL_UPLOAD_URL }}
       PYPI_USERNAME: __token__
