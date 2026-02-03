@@ -104,7 +104,7 @@ cdef class _Indicator:
             # negative dimension
             raise InvalidOptionError()
 
-        cdef ti.TI_REAL * c_inputs[ti.TI_MAXINDPARAMS]
+        cdef const ti.TI_REAL * c_inputs[ti.TI_MAXINDPARAMS]
         cdef np.ndarray[np.float64_t, ndim=1, mode='c'] input_ref
 
         for i in range(self.info.inputs):
@@ -122,7 +122,7 @@ cdef class _Indicator:
         for i in range(self.info.outputs):
             c_outputs[i] = &outputs[i,0]
 
-        ret = self.info.indicator(min_input_len, c_inputs, &c_options[0], c_outputs)
+        ret = self.info.indicator(min_input_len, <ti.inputs_t>c_inputs, &c_options[0], c_outputs)
         if ret == ti.TI_INVALID_OPTION:
             raise InvalidOptionError()
 
